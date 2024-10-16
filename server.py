@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+
 
 app = FastAPI()
 
@@ -50,3 +52,19 @@ async def dobro(value: int):
 async def somar(num_1:int = 0, num_2:int = 0):  # 0 now is a placeholder, a default value to param
     soma = num_1 + num_2
     return {"soma": f"A soma entre {num_1} + {num_2} é = {soma}"}
+
+class Produto(BaseModel):  # Criando uma classe que herda BaseModel
+    nome: str
+    preco: float
+
+@app.post('/produtos')  # router param
+def criar_produto(produto: Produto):  # Definindo como parâmetro, a instanciação de um objeto do tipo Produto
+    return {'message': f'Produto {produto.nome} no valor de R${produto.preco} cadastrado com sucesso!'}
+
+
+# Para enviar uma requisição tipo POST, é necessário o uso de um software como
+# o CURL ou Insomnia, o formato json ficou da seguinte forma:
+# {
+#     "nome": "nome_do_produto",
+#     "preco": "preco_do_produto"
+# }
